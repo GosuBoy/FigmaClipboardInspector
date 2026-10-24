@@ -72,7 +72,7 @@ export function decodeFigKiwi(data: Uint8Array): DecodedDocument {
   const rawMessage = uncompress(chunks.message)
   const decoder = root.decodeMessage ?? root.decodeNodeChanges
   if (typeof decoder !== 'function') throw new Error('Kiwi schema has neither a Message nor a NodeChanges decoder')
-  const message = object(decoder(rawMessage.bytes))
+  const message = object(decoder.call(root, rawMessage.bytes))
   const changes = Array.isArray(message.nodeChanges) ? message.nodeChanges : []
   const nodes = changes.slice(0, MAX_NODE_ROWS).map(nodeInfo)
   const blobs = Array.isArray(message.blobs) ? message.blobs : []
