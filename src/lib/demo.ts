@@ -15,9 +15,11 @@ const DEMO_SCHEMA = [
   ' string name = 4;',
   ' Size size = 5;',
   '}',
+  'struct BlobData { byte[] bytes; }',
   'message Message {',
   ' string type = 1;',
   ' NodeChange[] nodeChanges = 2;',
+  ' BlobData[] blobs = 3;',
   '}',
 ].join('\n')
 
@@ -32,6 +34,10 @@ export function createDemoCapture(): Capture {
       { guid: { sessionID: 1, localID: 3 }, parentIndex: { guid: { sessionID: 1, localID: 2 }, position: 'a' }, type: 'FRAME', name: 'Welcome card', size: { x: 360, y: 220 } },
       { guid: { sessionID: 1, localID: 4 }, parentIndex: { guid: { sessionID: 1, localID: 3 }, position: 'a' }, type: 'RECTANGLE', name: 'Background', size: { x: 360, y: 220 } },
       { guid: { sessionID: 1, localID: 5 }, parentIndex: { guid: { sessionID: 1, localID: 3 }, position: 'b' }, type: 'TEXT', name: 'Inspect anything', size: { x: 280, y: 52 } },
+    ],
+    blobs: [
+      { bytes: new Uint8Array([0x00, 0xff, 0x1a, 0xb2, 0x5c, 0x90, 0x31, 0x04]) },
+      { bytes: Uint8Array.from({ length: 1032 }, (_, index) => index % 256) },
     ],
   }
   const binary = writeKiwiContainer(106, deflateRaw(encodeBinarySchema(schema)), deflateRaw(encoder.encodeMessage(message)))
